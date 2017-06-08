@@ -4,18 +4,18 @@ data {
   int<lower=1> K;     // number of predictors
   int y[N];           // response variable (0/1)
   int id[N];          // identification variable
-  matrix[N,K] X; // matrix of predictors
+  matrix[N,K] X;      // matrix of predictors
 }
 
 parameters{
   real a;              // group-level intercept
-  vector[Nid] zaID;    // random dog-specific intercepts
+  vector[Nid] zaID;    // dog-varying intercepts' scaling vector (see the uncentered parameterisations)
   vector[K] Beta;      // vector of predictor regression coefficients
-  real<lower=0> sigmaID;  // standard deviation of dog-specific intercepts
+  real<lower=0> sigmaID;  // standard deviation of dog-varying intercepts
 }
 
 transformed parameters{
-  vector[Nid] rID;
+  vector[Nid] rID;        // transform scaled varying intercepts to the original scale
   rID = zaID * sigmaID;
 }
 
@@ -29,10 +29,10 @@ model{
   zaID ~ normal( 0 , 1 );
 
   // likelihood
-  prob = a + X * Beta;       // the model
+  prob = a + X * Beta;       // the model (without varying intercepts)
 
   for(i in 1:N) {
-    prob[i] = prob[i] + rID[id[i]];   // add varying intercept
+    prob[i] = prob[i] + rID[id[i]];   // add varying intercepts
   }
   y ~ bernoulli_logit(prob);        // sampling statement
 }
