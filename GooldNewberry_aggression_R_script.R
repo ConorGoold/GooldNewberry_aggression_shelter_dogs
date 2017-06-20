@@ -464,7 +464,7 @@ rawProbsAge = data.frame("HND_age1" = sum(d[d$variable=="handling"&d$age_groups=
                            length(d[d$variable=="handling"&d$age_groups==1, "response"]),
                          "KP_age1" = sum(d[d$variable=="kennel_people"&d$age_groups==1, "response"])/
                            length(d[d$variable=="kennel_people"&d$age_groups==1, "response"]),
-                         "OKP_age1" = sum(d[d$variable=="out"&d$age_groups==1, "response"])/
+                         "OKP_age1" = sum(d[d$variable=="out_kennel_people"&d$age_groups==1, "response"])/
                            length(d[d$variable=="out_kennel_people"&d$age_groups==1, "response"]),
                          "RF_age1"= sum(d[d$variable=="res_food"&d$age_groups==1, "response"])/
                            length(d[d$variable=="res_food"&d$age_groups==1, "response"]),
@@ -565,24 +565,26 @@ plotDF_sex <- data.frame( parameter = rep(c("HND","KP","OKP","EAT","TOY","FPL","
 plotDF_sex$sex <- factor(plotDF_sex$sex, levels = c("Female","Male"))
 plotDF_sex$parameter <- factor(plotDF_sex$parameter, levels=c("HND","KP","OKP","FPL","UPL","EAT","TOY"))
 
-ggplot( plotDF_sex, aes(parameter, mu, label=parameter)) +
-  geom_text(nudge_y = -0.02, size=5) +
-  geom_point(size=2, position=position_dodge(0.5)) +
-  geom_errorbar( aes(ymin = HDIlow, ymax = HDIhigh), lwd = 0.6, width=0, position=position_dodge(0.5)) +
-  geom_point( aes(parameter, rawProbs), col = rangi2, size = 2,shape=17, position=position_dodge(0.5)) +
-  theme_bw(base_family = "Times") +
-  facet_wrap(~sex, nrow = 1) +
-  ylab("Probability\n") +
-  xlab("") +
-  theme( panel.grid.major = element_blank(),
-         panel.grid.minor = element_blank(),
-         strip.text = element_text(size=25, colour = "black"),
-         axis.text.y = element_text(size=20, colour = "black"),
-         axis.text.x = element_blank(),
-         axis.ticks.x = element_blank(),
-         axis.title.y = element_text(size=20, colour = "black"))
+p1 <- ggplot( plotDF_sex, aes(parameter, mu, label=parameter)) +
+      geom_text(nudge_y = -0.02, size=5) +
+      geom_point(size=2, position=position_dodge(0.5)) +
+      geom_errorbar( aes(ymin = HDIlow, ymax = HDIhigh), lwd = 0.6, width=0, position=position_dodge(0.5)) +
+      geom_point( aes(parameter, rawProbs), col = rangi2, size = 2,shape=17, position=position_dodge(0.5)) +
+      theme_bw(base_family = "Times") +
+      facet_wrap(~sex, nrow = 1) +
+      ylab("Probability\n") +
+      xlab("") +
+      ggtitle("A") +
+      theme( plot.title = element_text(size=20, hjust = 0),
+             panel.grid.major = element_blank(),
+             panel.grid.minor = element_blank(),
+             strip.text = element_text(size=25, colour = "black"),
+             axis.text.y = element_text(size=20, colour = "black"),
+             axis.text.x = element_blank(),
+             axis.ticks.x = element_blank(),
+             axis.title.y = element_text(size=20, colour = "black"))
 
-ggsave( "Fig_1a.tiff", last_plot(), width=9, height=5)
+#ggsave( "Fig_1a.tiff", last_plot(), width=9, height=5)
 
 
 plotDF_age <- data.frame( parameter = rep(c("HND","KP","OKP","EAT","TOY","FPL","UPL"), 4),
@@ -600,25 +602,29 @@ plotDF_age <- data.frame( parameter = rep(c("HND","KP","OKP","EAT","TOY","FPL","
 plotDF_age$ageGroup <- factor(plotDF_age$ageGroup, levels = unique(plotDF_age$ageGroup))
 plotDF_age$parameter <- factor(plotDF_age$parameter, levels=c("HND","KP","OKP","FPL","UPL","EAT","TOY"))
 
-ggplot( plotDF_age, aes(parameter, mu, label=parameter)) +
-  geom_text(nudge_y = -0.02, size=5) +
-  geom_point(size=2, position=position_dodge(0.5)) +
-  geom_errorbar( aes(ymin = HDIlow, ymax = HDIhigh), lwd = 0.6, width=0, position=position_dodge(0.5)) +
-  geom_point( aes(parameter, rawProbs), col = rangi2, size = 2,shape=17, position=position_dodge(0.5)) +
-  theme_bw(base_family = "Times") +
-  facet_wrap(~ageGroup, nrow = 1) +
-  ylab("Probability\n") +
-  xlab("") +
-  theme( panel.grid.major = element_blank(),
-         panel.grid.minor = element_blank(),
-         strip.text = element_text(size=25, colour = "black"),
-         axis.text.y = element_text(size=20, colour = "black"),
-         axis.text.x = element_blank(),
-         axis.ticks.x = element_blank(),
-         axis.title.y = element_text(size=20, colour = "black"))
+p2 <- ggplot( plotDF_age, aes(parameter, mu, label=parameter)) +
+      geom_text(nudge_y = -0.02, size=5) +
+      geom_point(size=2, position=position_dodge(0.5)) +
+      geom_errorbar( aes(ymin = HDIlow, ymax = HDIhigh), lwd = 0.6, width=0, position=position_dodge(0.5)) +
+      geom_point( aes(parameter, rawProbs), col = rangi2, size = 2,shape=17, position=position_dodge(0.5)) +
+      theme_bw(base_family = "Times") +
+      facet_wrap(~ageGroup, nrow = 1) +
+      ylab("Probability\n") +
+      xlab("") +
+      ggtitle("B") +
+      theme( plot.title = element_text(size=20, hjust = 0),
+             panel.grid.major = element_blank(),
+             panel.grid.minor = element_blank(),
+             strip.text = element_text(size=25, colour = "black"),
+             axis.text.y = element_text(size=20, colour = "black"),
+             axis.text.x = element_blank(),
+             axis.ticks.x = element_blank(),
+             axis.title.y = element_text(size=20, colour = "black"))
 
-ggsave( "Fig_1b.tiff", last_plot(), width=14, height=6)
+#ggsave( "Fig_1b.tiff", last_plot(), width=14, height=6)
 
+g <- arrangeGrob( p1, p2, nrow=2 )
+ggsave("Fig1.tiff", g, width = 15, height = 10, units = "in", dpi = 500)
 
 #===========================================================================
 # Now compute the odds ratios for all different comparisons and interactions (in Supporting Material tables)
@@ -962,24 +968,26 @@ plotDF_sex <- data.frame( parameter = rep(c("DF","DM","KD","OKD"), 2),
 plotDF_sex$sex <- factor(plotDF_sex$sex, levels = c("Female","Male"))
 plotDF_sex$parameter <- factor(plotDF_sex$parameter,levels=c("KD","OKD","DF","DM"))
 
-ggplot( plotDF_sex, aes(parameter, mu, label=parameter)) +
-  geom_text(nudge_y = -0.02, size=5) +
-  geom_point(size=2, position=position_dodge(0.5)) +
-  geom_errorbar( aes(ymin = HDIlow, ymax = HDIhigh), lwd = 0.6, width=0, position=position_dodge(0.5)) +
-  geom_point( aes(parameter, rawProbs), col = rangi2, size = 2,shape=17, position=position_dodge(0.5)) +
-  theme_bw(base_family = "Times") +
-  facet_wrap(~sex, nrow = 1) +
-  ylab("Probability\n") +
-  xlab("") +
-  theme( panel.grid.major = element_blank(),
-         panel.grid.minor = element_blank(),
-         strip.text = element_text(size=25, colour = "black"),
-         axis.text.y = element_text(size=20, colour = "black"),
-         axis.text.x = element_blank(),
-         axis.ticks.x = element_blank(),
-         axis.title.y = element_text(size=20, colour = "black"))
+p1 <- ggplot( plotDF_sex, aes(parameter, mu, label=parameter)) +
+      geom_text(nudge_y = -0.02, size=5) +
+      geom_point(size=2, position=position_dodge(0.5)) +
+      geom_errorbar( aes(ymin = HDIlow, ymax = HDIhigh), lwd = 0.6, width=0, position=position_dodge(0.5)) +
+      geom_point( aes(parameter, rawProbs), col = rangi2, size = 2,shape=17, position=position_dodge(0.5)) +
+      theme_bw(base_family = "Times") +
+      facet_wrap(~sex, nrow = 1) +
+      ylab("Probability\n") +
+      xlab("") +
+      ggtitle("A") +
+      theme( plot.title = element_text(size=20, hjust = 0),
+             panel.grid.major = element_blank(),
+             panel.grid.minor = element_blank(),
+             strip.text = element_text(size=25, colour = "black"),
+             axis.text.y = element_text(size=20, colour = "black"),
+             axis.text.x = element_blank(),
+             axis.ticks.x = element_blank(),
+             axis.title.y = element_text(size=20, colour = "black"))
 
-ggsave( "Fig_2a.tiff", last_plot(), width=9, height=5)
+#ggsave( "Fig_2a.tiff", last_plot(), width=9, height=5)
 
 plotDF_age <- data.frame( parameter = rep(c("DF","DM","KD","OKD"), 4),
                           ageGroup =  rep(c("4 to 10 months", "10 months to 3 years", "3 to 6 years", "Over 6 years"),
@@ -996,24 +1004,29 @@ plotDF_age <- data.frame( parameter = rep(c("DF","DM","KD","OKD"), 4),
 plotDF_age$ageGroup <- factor(plotDF_age$ageGroup, levels = unique(plotDF_age$ageGroup))
 plotDF_age$parameter <- factor(plotDF_age$parameter, levels=c("KD","OKD","DF","DM"))
 
-ggplot( plotDF_age, aes(parameter, mu, label=parameter)) +
-  geom_text(nudge_y = -0.025, size=5) +
-  geom_point(size=2, position=position_dodge(0.5)) +
-  geom_errorbar( aes(ymin = HDIlow, ymax = HDIhigh), lwd = 0.6, width=0, position=position_dodge(0.5)) +
-  geom_point( aes(parameter, rawProbs), col = rangi2, size = 2,shape=17, position=position_dodge(0.5)) +
-  theme_bw(base_family = "Times") +
-  facet_wrap(~ageGroup, nrow = 1) +
-  ylab("Probability\n") +
-  xlab("") +
-  theme( panel.grid.major = element_blank(),
-         panel.grid.minor = element_blank(),
-         strip.text = element_text(size=25, colour = "black"),
-         axis.text.y = element_text(size=20, colour = "black"),
-         axis.text.x = element_blank(),
-         axis.ticks.x = element_blank(),
-         axis.title.y = element_text(size=20, colour = "black"))
+p2 <- ggplot( plotDF_age, aes(parameter, mu, label=parameter)) +
+      geom_text(nudge_y = 0.035, size=5) +
+      geom_point(size=2, position=position_dodge(0.5)) +
+      geom_errorbar( aes(ymin = HDIlow, ymax = HDIhigh), lwd = 0.6, width=0, position=position_dodge(0.5)) +
+      geom_point( aes(parameter, rawProbs), col = rangi2, size = 2,shape=17, position=position_dodge(0.5)) +
+      theme_bw(base_family = "Times") +
+      facet_wrap(~ageGroup, nrow = 1) +
+      ylab("Probability\n") +
+      xlab("") +
+      ggtitle("B") +
+      theme( plot.title = element_text(size=20, hjust = 0),
+             panel.grid.major = element_blank(),
+             panel.grid.minor = element_blank(),
+             strip.text = element_text(size=25, colour = "black"),
+             axis.text.y = element_text(size=20, colour = "black"),
+             axis.text.x = element_blank(),
+             axis.ticks.x = element_blank(),
+             axis.title.y = element_text(size=20, colour = "black"))
 
-ggsave( "Fig_2b.tiff", last_plot(), width=14, height=6)
+#ggsave( "Fig_2b.tiff", last_plot(), width=14, height=6)
+
+g <- arrangeGrob( p1, p2, nrow=2 )
+ggsave("Fig2.tiff", g, width = 15, height = 10, units = "in")
 
 # get odds ratio results
 odds <- as.data.frame(apply(predictedLogOdds, 2 , exp))
